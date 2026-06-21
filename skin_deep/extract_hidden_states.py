@@ -9,6 +9,18 @@ Saves a compressed ``.npz`` with:
 The aligned ("instruct") model and its version-matched base checkpoint must
 share the same architecture so that the per-layer difference is well defined.
 
+Two extraction modes (see the paper, "Prompts and Activations"):
+
+* **raw** (default) -- prompts are passed directly to each model. This is the
+  path used for the Geometric Fragility Score ranking (run ``compute_gfs.py``
+  on the resulting ``.npz``).
+* **chat template** (``--chat_template``) -- each prompt is wrapped as a single
+  user turn and formatted with the *instruct* tokenizer's ``apply_chat_template``
+  (``add_generation_prompt=True``); both models then encode the same formatted
+  strings with their own tokenizers. This reproduces the chat-template
+  robustness analyses. Base foundation models usually lack a chat template,
+  which is why the instruct tokenizer is used for formatting.
+
 Prompts are read from two JSONL files (one object per line, each with a
 ``"text"`` field):
     --safe_prompts     harmful-request prompts an aligned model should refuse
@@ -40,6 +52,25 @@ def read_texts(path: str):
     return texts
 
 
+def apply_chat_template(prompts, instruct_model):
+    """Format each prompt as a single user turn via the instruct chat template."""
+    tok = AutoTokenizer.from_pretrained(instruct_model, trust_remote_code=True)
+    if tok.chat_template is None:
+        raise RuntimeError(
+            f"{instruct_model} has no chat_template; cannot use --chat_template."
+        )
+    formatted = [
+        tok.apply_chat_template(
+            [{"role": "user", "content": p}],
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+        for p in prompts
+    ]
+    print(f"Applied chat template. Sample (200 chars): {formatted[0][:200]!r}")
+    return formatted
+
+
 def load_model(model_id: str, dtype):
     tok = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
@@ -58,9 +89,13 @@ def main():
     ap.add_argument("--safe_prompts", required=True, help="JSONL of harmful-request prompts")
     ap.add_argument("--general_prompts", required=True, help="JSONL of benign instructions")
     ap.add_argument("--output", required=True, help="Output .npz path")
+    ap.add_argument("--chat_template", action="store_true",
+                    help="Format prompts with the instruct tokenizer's chat template "
+                         "(reproduces the chat-template robustness path).")
     ap.add_argument("--gpu", type=int, default=0)
     ap.add_argument("--batch_size", type=int, default=8)
-    ap.add_argument("--max_length", type=int, default=128)
+    ap.add_argument("--max_length", type=int, default=128,
+                    help="Max tokens (use a larger value, e.g. 256, with --chat_template).")
     args = ap.parse_args()
 
     safe = read_texts(args.safe_prompts)
@@ -68,6 +103,9 @@ def main():
     prompts = safe + general
     labels = np.array(["safe"] * len(safe) + ["general"] * len(general))
     print(f"Loaded {len(safe)} safe + {len(general)} general prompts")
+
+    if args.chat_template:
+        prompts = apply_chat_template(prompts, args.instruct_model)
 
     dtype = torch.float16
 

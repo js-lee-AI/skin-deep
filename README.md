@@ -14,7 +14,7 @@ A self-contained pipeline for the **pre-attack** analyses in the paper:
 
 | Script | Paper claim | What it does |
 | --- | --- | --- |
-| `extract_hidden_states.py` | — | Extract last-token, all-layer activations from an aligned model and its version-matched base model. |
+| `extract_hidden_states.py` | — | Extract last-token, all-layer activations from an aligned model and its version-matched base model (raw prompts, or `--chat_template`). |
 | `analyze_subspace.py` | C1 (subspace) | Per-layer contrastive-PCA direction, Cohen's *d*, PERMANOVA, RBF-MMD, with BH-FDR correction. |
 | `compute_gfs.py` | C4 (diagnostic) | Compute the Geometric Fragility Score and per-layer profiles. |
 | `common_utils.py` | — | Shared library (extraction, cPCA, Cohen's *d*, MMD, PERMANOVA, BH-FDR). |
@@ -66,6 +66,8 @@ python skin_deep/extract_hidden_states.py \
 
 Repeat for each model into `results/<model>/hidden_states.npz`
 (e.g. `llama`, `qwen`, `mistral`, `gemma`).
+
+By default prompts are passed **raw** (no chat template) — the path used by the GFS ranking. To reproduce the **chat-template robustness** analyses, add `--chat_template` (and a larger `--max_length`, e.g. `256`); each prompt is then wrapped as a single user turn with the instruct tokenizer's `apply_chat_template` (`add_generation_prompt=True`) before extraction.
 
 **2. Subspace analysis (Claim 1):**
 
