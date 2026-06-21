@@ -104,7 +104,8 @@ LICENSE
 
 ## Citation
 
-```bibtex
-```
+A BibTeX entry will be added once the arXiv version is available.
 
-Released under the [MIT License](LICENSE).
+## License
+
+The code in this repository is released under the [MIT License](LICENSE). The paper itself is distributed under CC BY 4.0 via arXiv.
