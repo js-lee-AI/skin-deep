@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Extracted activations and run outputs (regenerate locally)
+*.npz
+results/
+outputs/
+*.png
+*.json
+!**/example*.json
+
+.DS_Store
+.ipynb_checkpoints/
