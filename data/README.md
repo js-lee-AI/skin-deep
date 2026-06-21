@@ -13,7 +13,7 @@ per line and a `"text"` field:
 * **General set** (benign instructions). In the paper this combines
   250 Alpaca + 250 OASST (OpenAssistant) prompts.
 
-These datasets are **not redistributed here** — obtain them from their original
+These datasets are **not redistributed here**. Obtain them from their original
 sources under their respective licenses and export the prompt text into the two
 JSONL files above:
 
