@@ -102,6 +102,14 @@ requirements.txt
 LICENSE
 ```
 
+## Key results
+
+Skin-Deep is a diagnostic, not a task model, so there is no accuracy-vs-baseline table. Its main empirical findings, across 21 instruction-tuned models (3B–32B):
+
+- **Low-rank safety subspace.** Harmful-request and benign prompts separate along a small set of hidden-state directions; on the core models the peak-layer separation is Cohen's *d* ≥ 1.8 (held-out split-sample *d* ≈ 2.7–3.2 for Llama-3.1-8B, Qwen-2.5-7B, Mistral-7B-v0.3, Gemma-2-9B), and it survives full-space tests (PERMANOVA, RBF-MMD) and unit-norm controls.
+- **Causal, not just correlational.** Removing recovered peak-layer directions during generation weakens harmful-request refusal relative to random-direction controls, linking the geometry to refusal behavior.
+- **Pre-attack diagnostic (GFS).** Computed before any fine-tuning, GFS flags the initially safe model that keeps the most refusal after small benign LoRA: every non-Gemma core model reaches full harmful compliance (1.00) at the largest update (n=200), while Gemma-2-9B stays at 0.68 — and it is the lowest-GFS core model.
+
 ## Citation
 
 A BibTeX entry will be added once the arXiv version is available.
