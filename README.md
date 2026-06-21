@@ -6,7 +6,7 @@ model's hidden-state activations, before any prompt- or weight-level attack is
 run.
 
 > Paper: *Skin-Deep: A Geometric Diagnostic for Alignment Fragility in Large
-> Language Model Representations* (arXiv: `XXXX.XXXXX`).
+> Language Model Representations*.
 
 ## What this repository contains
 
@@ -19,7 +19,7 @@ A self-contained pipeline for the **pre-attack** analyses in the paper:
 | `compute_gfs.py` | C4 (diagnostic) | Compute the Geometric Fragility Score and per-layer profiles. |
 | `common_utils.py` | — | Shared library (extraction, cPCA, Cohen's *d*, MMD, PERMANOVA, BH-FDR). |
 
-### Responsible release (please read)
+### Responsible release
 
 Consistent with the paper's **Ethics Statement**, this repository releases only
 the **pre-attack diagnostic** pipeline. The following attack-side artifacts are
@@ -103,16 +103,6 @@ LICENSE
 ## Citation
 
 ```bibtex
-@misc{lee2026skindeep,
-  title         = {Skin-Deep: A Geometric Diagnostic for Alignment Fragility in Large Language Model Representations},
-  author        = {Lee, Dongyub Jude and Lee, Jungseob and Lee, Seungyoon and Hong, Seongtae and Son, Suhyune and Eo, Sugyeong and Seo, Jaehyung and Lim, Heuiseok},
-  year          = {2026},
-  eprint        = {XXXX.XXXXX},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL}
-}
 ```
-
-## License
 
 Released under the [MIT License](LICENSE).
