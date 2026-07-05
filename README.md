@@ -111,13 +111,14 @@ Skin-Deep is a diagnostic, not a task model, so there is no accuracy-vs-baseline
 - **Pre-attack diagnostic (GFS).** Computed before any fine-tuning, GFS flags the initially safe model that keeps the most refusal after small benign LoRA: every non-Gemma core model reaches full harmful compliance (1.00) at the largest update (n=200), while Gemma-2-9B stays at 0.68, and it is the lowest-GFS core model.
 
 ## Citation
-
+```text
 @article{lee2026skin,
   title={Skin-Deep: A Geometric Diagnostic for Alignment Fragility in Large Language Model Representations},
   author={Lee, Dongyub Jude and Lee, Jungseob and Lee, Seungyoon and Hong, Seongtae and Son, Suhyune and Eo, Sugyeong and Seo, Jaehyung and Lim, Heuiseok},
   journal={arXiv preprint arXiv:2606.22676},
   year={2026}
 }
+```
 
 ## License
 
