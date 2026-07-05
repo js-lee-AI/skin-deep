@@ -112,7 +112,12 @@ Skin-Deep is a diagnostic, not a task model, so there is no accuracy-vs-baseline
 
 ## Citation
 
-A BibTeX entry will be added once the arXiv version is available.
+@article{lee2026skin,
+  title={Skin-Deep: A Geometric Diagnostic for Alignment Fragility in Large Language Model Representations},
+  author={Lee, Dongyub Jude and Lee, Jungseob and Lee, Seungyoon and Hong, Seongtae and Son, Suhyune and Eo, Sugyeong and Seo, Jaehyung and Lim, Heuiseok},
+  journal={arXiv preprint arXiv:2606.22676},
+  year={2026}
+}
 
 ## License
 
