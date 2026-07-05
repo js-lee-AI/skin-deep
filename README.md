@@ -1,12 +1,36 @@
-# Skin-Deep: A Geometric Diagnostic for Alignment Fragility in LLM Representations
+<div align="center">
 
-Reference implementation of the **Geometric Fragility Score (GFS)**, a
-*pre-attack* diagnostic that reads alignment fragility directly from an aligned
-model's hidden-state activations, before any prompt- or weight-level attack is
-run.
+# 🩹 Skin-Deep
 
-> Paper: *Skin-Deep: A Geometric Diagnostic for Alignment Fragility in Large
-> Language Model Representations*.
+### A Geometric Diagnostic for Alignment Fragility in LLM Representations
+
+[![arXiv](https://img.shields.io/badge/arXiv-2606.22676-b31b1b.svg)](https://arxiv.org/abs/2606.22676)
+[![License: MIT](https://img.shields.io/badge/Code-MIT-green.svg)](LICENSE)
+[![Paper: CC BY 4.0](https://img.shields.io/badge/Paper-CC%20BY%204.0-blue.svg)](https://arxiv.org/abs/2606.22676)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
+[![Stars](https://img.shields.io/github/stars/js-lee-AI/skin-deep?style=social)](https://github.com/js-lee-AI/skin-deep/stargazers)
+
+<img src="assets/framework.png" width="66%" alt="Skin-Deep overview" />
+
+<em>Reading alignment fragility straight from an aligned model's hidden states, <b>before</b> any prompt- or weight-level attack is run.</em>
+
+<b><a href="https://arxiv.org/abs/2606.22676">📄 Paper</a> · <a href="#overview">✨ Overview</a> · <a href="#installation">⚙️ Installation</a> · <a href="#usage">🚀 Usage</a> · <a href="#key-results">📊 Results</a> · <a href="#citation">📌 Citation</a></b>
+
+</div>
+
+---
+
+## News
+
+- **2026-06** · Paper released on [arXiv](https://arxiv.org/abs/2606.22676), and the pre-attack diagnostic pipeline is public here.
+
+## Overview
+
+**Skin-Deep** is the reference implementation of the **Geometric Fragility Score (GFS)**, a *pre-attack* diagnostic that reads alignment fragility directly from an aligned model's hidden-state activations, **before** any prompt- or weight-level attack is run.
+
+The central finding: on many open-weight models, safety alignment is *skin-deep*. Harmful and benign prompts separate along a small, low-rank set of hidden-state directions, and that geometry, read before any fine-tuning, predicts which checkpoints will lose their refusal behavior after a small, benign update.
+
+> Paper: *Skin-Deep: A Geometric Diagnostic for Alignment Fragility in Large Language Model Representations.*
 
 ## What this repository contains
 
@@ -21,17 +45,14 @@ A self-contained pipeline for the **pre-attack** analyses in the paper:
 
 ### Responsible release
 
-Consistent with the paper's **Ethics Statement**, this repository releases only
-the **pre-attack diagnostic** pipeline. The following attack-side artifacts are
-**deliberately withheld** and are *not* part of this repository:
+Consistent with the paper's **Ethics Statement**, this repository releases only the **pre-attack diagnostic** pipeline. The following attack-side artifacts are **deliberately withheld** and are *not* part of this repository:
 
 1. layer-level direction-ablation hooks and the generation-time code path that applies them;
 2. model-specific peak-layer indices at attack-coordinate granularity;
 3. LoRA adapter weights from the fine-tuning fragility curve;
 4. the difference-in-means ("Arditi") refusal-direction extraction specialized to specific model families.
 
-GFS is intended as a **defensive** tool: flagging fragile refusal behavior in a
-checkpoint *before* release. Please use it accordingly.
+GFS is intended as a **defensive** tool: flagging fragile refusal behavior in a checkpoint *before* release. Please use it accordingly.
 
 ## Installation
 
@@ -47,9 +68,7 @@ huggingface-cli login
 
 ## Data
 
-Prepare two JSONL prompt files (a harmful-request "safe" set and a benign
-"general" set) as described in [`data/README.md`](data/README.md). The source
-datasets are not redistributed here.
+Prepare two JSONL prompt files (a harmful-request "safe" set and a benign "general" set) as described in [`data/README.md`](data/README.md). The source datasets are not redistributed here.
 
 ## Usage
 
@@ -64,8 +83,7 @@ python skin_deep/extract_hidden_states.py \
     --output results/llama/hidden_states.npz
 ```
 
-Repeat for each model into `results/<model>/hidden_states.npz`
-(e.g. `llama`, `qwen`, `mistral`, `gemma`).
+Repeat for each model into `results/<model>/hidden_states.npz` (e.g. `llama`, `qwen`, `mistral`, `gemma`).
 
 By default prompts are passed **raw** (no chat template), the path used by the GFS ranking. To reproduce the **chat-template robustness** analyses, add `--chat_template` (and a larger `--max_length`, e.g. `256`); each prompt is then wrapped as a single user turn with the instruct tokenizer's `apply_chat_template` (`add_generation_prompt=True`) before extraction.
 
@@ -85,8 +103,7 @@ python skin_deep/compute_gfs.py \
     --models llama,qwen,mistral,gemma
 ```
 
-This writes `gfs_results.json` and `gfs_analysis.png` (GFS bar chart plus
-per-layer Cohen's *d* and PC1–Arditi cosine profiles).
+This writes `gfs_results.json` and `gfs_analysis.png` (GFS bar chart plus per-layer Cohen's *d* and PC1-Arditi cosine profiles).
 
 ## Repository structure
 
@@ -111,7 +128,8 @@ Skin-Deep is a diagnostic, not a task model, so there is no accuracy-vs-baseline
 - **Pre-attack diagnostic (GFS).** Computed before any fine-tuning, GFS flags the initially safe model that keeps the most refusal after small benign LoRA: every non-Gemma core model reaches full harmful compliance (1.00) at the largest update (n=200), while Gemma-2-9B stays at 0.68, and it is the lowest-GFS core model.
 
 ## Citation
-```text
+
+```bibtex
 @article{lee2026skin,
   title={Skin-Deep: A Geometric Diagnostic for Alignment Fragility in Large Language Model Representations},
   author={Lee, Dongyub Jude and Lee, Jungseob and Lee, Seungyoon and Hong, Seongtae and Son, Suhyune and Eo, Sugyeong and Seo, Jaehyung and Lim, Heuiseok},
