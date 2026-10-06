@@ -4,13 +4,16 @@
 
 ### A Geometric Diagnostic for Alignment Fragility in LLM Representations
 
+[![AACL-IJCNLP 2026](https://img.shields.io/badge/AACL--IJCNLP%202026-Findings-8A2BE2.svg)](https://2026.aaclnet.org/)
 [![arXiv](https://img.shields.io/badge/arXiv-2606.22676-b31b1b.svg)](https://arxiv.org/abs/2606.22676)
 [![License: MIT](https://img.shields.io/badge/Code-MIT-green.svg)](LICENSE)
 [![Paper: CC BY 4.0](https://img.shields.io/badge/Paper-CC%20BY%204.0-blue.svg)](https://arxiv.org/abs/2606.22676)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
 [![Stars](https://img.shields.io/github/stars/js-lee-AI/skin-deep?style=social)](https://github.com/js-lee-AI/skin-deep/stargazers)
 
-<img src="assets/framework.png" width="66%" alt="Skin-Deep overview" />
+<img src="assets/framework.png" width="100%" alt="Skin-Deep overview" />
+
+<b>Official implementation of the <a href="https://2026.aaclnet.org/">Findings of AACL-IJCNLP 2026</a> paper.</b>
 
 <em>Reading alignment fragility straight from an aligned model's hidden states, <b>before</b> any prompt- or weight-level attack is run.</em>
 
@@ -22,13 +25,15 @@
 
 ## News
 
+- **2026-10** · The camera-ready version is on [arXiv](https://arxiv.org/abs/2606.22676) (v2).
+- **2026-09** · Accepted to **Findings of AACL-IJCNLP 2026**.
 - **2026-06** · Paper released on [arXiv](https://arxiv.org/abs/2606.22676), and the pre-attack diagnostic pipeline is public here.
 
 ## Overview
 
 **Skin-Deep** is the reference implementation of the **Geometric Fragility Score (GFS)**, a *pre-attack* diagnostic that reads alignment fragility directly from an aligned model's hidden-state activations, **before** any prompt- or weight-level attack is run.
 
-The central finding: on many open-weight models, safety alignment is *skin-deep*. Harmful and benign prompts separate along a small, low-rank set of hidden-state directions, and that geometry, read before any fine-tuning, predicts which checkpoints will lose their refusal behavior after a small, benign update.
+Across twenty-one instruction-tuned models, harmful requests and benign instructions exhibit a recurring low-rank separation pattern, and selected direction ablations weaken refusal. In benign low-rank fine-tuning experiments, the initially safe model with the lowest score before fine-tuning has the lowest harmful-compliance rate when trained on the largest tested set of harmless examples.
 
 > Paper: *Skin-Deep: A Geometric Diagnostic for Alignment Fragility in Large Language Model Representations.*
 
@@ -47,10 +52,9 @@ A self-contained pipeline for the **pre-attack** analyses in the paper:
 
 Consistent with the paper's **Ethics Statement**, this repository releases only the **pre-attack diagnostic** pipeline. The following attack-side artifacts are **deliberately withheld** and are *not* part of this repository:
 
-1. layer-level direction-ablation hooks and the generation-time code path that applies them;
-2. model-specific peak-layer indices at attack-coordinate granularity;
-3. LoRA adapter weights from the fine-tuning fragility curve;
-4. the difference-in-means ("Arditi") refusal-direction extraction specialized to specific model families.
+1. generation-time direction-ablation hooks;
+2. attack-ready direction-extraction scripts;
+3. the LoRA adapter weights used for the behavioral tests.
 
 GFS is intended as a **defensive** tool: flagging fragile refusal behavior in a checkpoint *before* release. Please use it accordingly.
 
@@ -123,9 +127,10 @@ LICENSE
 
 Skin-Deep is a diagnostic, not a task model, so there is no accuracy-vs-baseline table. Its main empirical findings, across 21 instruction-tuned models (3B–32B):
 
-- **Low-rank safety subspace.** Harmful-request and benign prompts separate along a small set of hidden-state directions; on the core models the peak-layer separation is Cohen's *d* ≥ 1.8 (held-out split-sample *d* ≈ 2.7–3.2 for Llama-3.1-8B, Qwen-2.5-7B, Mistral-7B-v0.3, Gemma-2-9B), and it survives full-space tests (PERMANOVA, RBF-MMD) and unit-norm controls.
-- **Causal, not just correlational.** Removing recovered peak-layer directions during generation weakens harmful-request refusal relative to random-direction controls, linking the geometry to refusal behavior.
-- **Pre-attack diagnostic (GFS).** Computed before any fine-tuning, GFS flags the initially safe model that keeps the most refusal after small benign LoRA: every non-Gemma core model reaches full harmful compliance (1.00) at the largest update (n=200), while Gemma-2-9B stays at 0.68, and it is the lowest-GFS core model.
+- **Separation.** Harmful requests and benign instructions separate along a small set of directions. In split-sample checks, directions fitted on one prompt subset also separate the held-out prompts, with held-out Cohen's *d* of 3.23, 2.97, 2.71, and 2.88 for Llama-3.1-8B, Qwen-2.5-7B, Mistral-7B-v0.3, and Gemma-2-9B, and a minimum of 1.69 across a fourteen-model check. PERMANOVA remains significant after correction for all core models, and unit-normalized PCA also retains the separation.
+- **Behavioral relevance.** Removing a selected PCA, contrastive PCA, or reference refusal direction during generation gives a detectable refusal decrease for at least one tested direction in four of the six ablation models. The effective direction varies by model, and random-direction rates remain close to the baselines.
+- **Recurrence.** The core families preserve similar activation relationships among matched prompts. Every pair's peak-layer CKA exceeds the prompt-shuffle null, while the strongest separation occurs at different depths.
+- **Diagnostic association (GFS).** Computed before any fine-tuning, GFS is lowest for Gemma-2-9B among the initially safe models of the LoRA cohort, and Gemma-2-9B also has the lowest harmful-compliance rate after benign LoRA on the largest tested set (n=200). Every non-Gemma core run reaches full compliance (1.00), while Gemma's mean is 0.68. This is an endpoint association within one harmless-data protocol and a small cohort, not a calibrated forecast.
 
 ## Citation
 
