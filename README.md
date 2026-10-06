@@ -6,6 +6,7 @@
 
 [![AACL-IJCNLP 2026](https://img.shields.io/badge/AACL--IJCNLP%202026-Findings-8A2BE2.svg)](https://2026.aaclnet.org/)
 [![arXiv](https://img.shields.io/badge/arXiv-2606.22676-b31b1b.svg)](https://arxiv.org/abs/2606.22676)
+[![Project Page](https://img.shields.io/badge/Project-Page-277f80.svg)](https://js-lee-ai.github.io/skin-deep/)
 [![License: MIT](https://img.shields.io/badge/Code-MIT-green.svg)](LICENSE)
 [![Paper: CC BY 4.0](https://img.shields.io/badge/Paper-CC%20BY%204.0-blue.svg)](https://arxiv.org/abs/2606.22676)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
@@ -17,7 +18,7 @@
 
 <em>Reading alignment fragility straight from an aligned model's hidden states, <b>before</b> any prompt- or weight-level attack is run.</em>
 
-<b><a href="https://arxiv.org/abs/2606.22676">📄 Paper</a> · <a href="#overview">✨ Overview</a> · <a href="#installation">⚙️ Installation</a> · <a href="#usage">🚀 Usage</a> · <a href="#key-results">📊 Results</a> · <a href="#citation">📌 Citation</a></b>
+<b><a href="https://js-lee-ai.github.io/skin-deep/">🌐 Project Page</a> · <a href="https://arxiv.org/abs/2606.22676">📄 Paper</a> · <a href="#overview">✨ Overview</a> · <a href="#installation">⚙️ Installation</a> · <a href="#usage">🚀 Usage</a> · <a href="#key-results">📊 Results</a> · <a href="#citation">📌 Citation</a></b>
 
 </div>
 
